@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reviewer — FlashPrep Kits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand-navy: #1E234B;      
+  --brand-yellow: #FFC83D;    
+  --brand-purple: #7C73F9;    
+  --brand-teal: #3CC0A1;
+  --brand-red: #FF7E7E;
+  --surface: #F9FAFF;
+  --white: #FFFFFF;
+  --muted: #6E7191;
+  --border: #1E234B;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+  font-family: 'Poppins', sans-serif; 
+  background: var(--surface); 
+  color: var(--brand-navy); 
+  min-height: 100vh; 
+  line-height: 1.6;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);  
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.8rem 4%; border-bottom: 2px solid var(--brand-navy);
+}
+.logo { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; font-weight: 800; font-size: 1.2rem; color: var(--brand-navy); cursor: pointer; }
+.logo img { width: 34px; height: 34px; object-fit: contain; }
+.logo span { color: var(--brand-purple); }
+
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.btn-back { font-size: 0.9rem; font-weight: 800; color: var(--brand-navy); text-decoration: none; transition: 0.2s; padding: 0.4rem 0.8rem; border: 2px solid var(--brand-navy); border-radius: 8px; box-shadow: 2px 2px 0px var(--brand-navy); background: var(--white); }
+.btn-back:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0px var(--brand-navy); }
+
+.nav-plan-badge { font-size: 0.75rem; font-weight: 800; padding: 0.4rem 1rem; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px; border: 2px solid var(--brand-navy); box-shadow: 2px 2px 0px var(--brand-navy); }
+.badge-free { background: var(--surface); color: var(--muted); border-color: var(--muted); box-shadow: 2px 2px 0px var(--muted); }
+.badge-perkit { background: var(--brand-purple); color: white; }
+.badge-semester { background: var(--brand-yellow); color: var(--brand-navy); }
+
+.btn-upgrade-sm { 
+  background: var(--brand-yellow); color: var(--brand-navy); border: 2px solid var(--brand-navy);
+  padding: 0.5rem 1.2rem; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.9rem;
+  box-shadow: 2px 2px 0px var(--brand-navy); transition: 0.2s; cursor: pointer;
+}
+.btn-upgrade-sm:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0px var(--brand-navy); }
+
+/* LAYOUT */
+.page { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 66px); }
+
+/* SIDEBAR */
+.sidebar { background: var(--white); border-right: 2px solid var(--brand-navy); padding: 2rem 1.5rem; position: sticky; top: 66px; height: calc(100vh - 66px); overflow-y: auto; }
+.sidebar-subject { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid rgba(30, 35, 75, 0.1); padding-bottom: 1.5rem; }
+.s-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--surface); border: 2px solid var(--brand-navy); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 2px 2px 0px var(--brand-navy); }
+.s-name { font-weight: 800; font-size: 1.1rem; line-height: 1.2; }
+.s-code { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+
+.kit-nav-label { font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--brand-purple); margin-bottom: 1rem; padding: 0 0.5rem; }
+.kit-nav-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.8rem 1rem; border-radius: 12px; cursor: pointer;
+  font-size: 0.9rem; font-weight: 600; color: var(--muted); text-decoration: none;
+  transition: all 0.2s; margin-bottom: 0.5rem; border: 2px solid transparent;
+}
+.kit-nav-item:hover { color: var(--brand-navy); background: var(--surface); }
+.kit-nav-item.active { background: var(--brand-yellow); color: var(--brand-navy); border-color: var(--brand-navy); box-shadow: 3px 3px 0px var(--brand-navy); }
+.kit-nav-item.locked-nav { color: var(--muted); opacity: 0.6; cursor: default; }
+.kit-nav-item.locked-nav:hover { background: transparent; color: var(--muted); }
+.kit-ico { font-size: 1.2rem; width: 24px; text-align: center; }
+.kit-nav-name { flex: 1; }
+.kit-nav-lock { font-size: 0.8rem; }
+.kit-nav-check { font-size: 1rem; color: var(--brand-teal); font-weight: 800; }
+
+/* SUBJECT SELECTOR */
+.subj-list { margin-bottom: 1.5rem; }
+.subj-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.75rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-bottom: 0.3rem; border: 2px solid transparent; text-decoration: none; color: var(--brand-navy); }
+.subj-item:hover { background: var(--surface); border-color: var(--brand-navy); }
+.subj-item.active-subj { color: var(--brand-purple); font-weight: 800; }
+.subj-item.locked { color: var(--muted); opacity: 0.6; }
+.subj-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; border: 2px solid var(--brand-navy); }
+.subj-dot-active { background: var(--brand-teal); }
+.subj-dot-locked { background: var(--surface); border-color: var(--muted); }
+
+/* MAIN */
+.main { padding: 0; overflow-x: hidden; }
+
+/* HERO BANNER */
+.reviewer-banner {
+  background: var(--brand-navy); padding: 3rem 4%;
+  display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+  border-bottom: 8px solid var(--brand-yellow); color: white;
+}
+.rb-subject { font-size: 0.85rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--brand-yellow); margin-bottom: 0.5rem; }
+.rb-title { font-weight: 800; font-size: 2.2rem; margin-bottom: 0.5rem; line-height: 1.1; }
+.rb-sub { font-size: 1rem; opacity: 0.8; font-weight: 500; }
+.rb-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.rb-stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); padding: 1rem 1.5rem; border-radius: 12px; text-align: center; min-width: 130px; }
+.rb-n { font-weight: 800; font-size: 1.8rem; color: var(--brand-yellow); line-height: 1; }
+.rb-l { font-size: 0.75rem; font-weight: 600; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.4rem; }
+
+/* KIT TABS */
+.kit-tabs { display: flex; gap: 0; background: var(--white); border-bottom: 2px solid var(--brand-navy); overflow-x: auto; padding: 0 4%; }
+.k-tab { padding: 1.2rem 1.5rem; font-size: 0.95rem; font-weight: 700; cursor: pointer; white-space: nowrap; border: none; background: transparent; color: var(--muted); font-family: 'Poppins', sans-serif; border-bottom: 4px solid transparent; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+.k-tab:hover { color: var(--brand-navy); background: var(--surface); }
+.k-tab.active { color: var(--brand-navy); border-bottom-color: var(--brand-yellow); background: var(--surface); }
+.k-tab.locked-tab { opacity: 0.5; }
+.k-tab .tab-lock { font-size: 0.8rem; }
+
+/* CONTENT AREA */
+.content-area { padding: 3rem 4%; }
+
+/* PLAN SWITCHER (demo) */
+.plan-demo-bar { background: var(--white); border: 2px solid var(--brand-navy); box-shadow: 4px 4px 0px var(--brand-navy); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.plan-demo-bar span { font-size: 0.9rem; color: var(--brand-navy); font-weight: 800; }
+.plan-btn { padding: 0.5rem 1rem; border-radius: 8px; border: 2px solid var(--brand-navy); background: var(--white); font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: 'Poppins', sans-serif; box-shadow: 2px 2px 0px var(--brand-navy); }
+.plan-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0px var(--brand-navy); }
+.plan-btn.active { background: var(--brand-yellow); color: var(--brand-navy); }
+
+/* ── FLASH CARDS ── */
+.fc-area { max-width: 700px; margin: 0 auto; }
+.fc-progress-bar { height: 10px; background: var(--surface); border-radius: 10px; border: 1px solid var(--brand-navy); overflow: hidden; margin-bottom: 2rem; }
+.fc-prog-fill { height: 100%; background: var(--brand-teal); border-right: 1px solid var(--brand-navy); transition: width 0.4s; }
+.flashcard-container { perspective: 1000px; margin-bottom: 2rem; cursor: pointer; }
+.flashcard { width: 100%; min-height: 350px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; }
+.flashcard.flipped { transform: rotateY(180deg); }
+.fc-face { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; backface-visibility: hidden; background: var(--white); border: 4px solid var(--brand-navy); border-radius: 24px; padding: 3rem; box-shadow: 12px 12px 0px var(--brand-navy); }
+.fc-back { transform: rotateY(180deg); background: #F4F3FF; }
+.fc-hint { position: absolute; top: 1.5rem; left: 1.5rem; font-size: 0.8rem; font-weight: 800; color: var(--brand-purple); text-transform: uppercase; letter-spacing: 1px; }
+.fc-word { font-weight: 800; font-size: 1.8rem; color: var(--brand-navy); line-height: 1.4; }
+.fc-word-back { font-size: 1.2rem; color: var(--brand-navy); line-height: 1.6; font-weight: 600; margin-top: 1rem; }
+.fc-word-back-ans { font-size: 1.8rem; font-weight: 800; color: var(--brand-teal); }
+.fc-tap-hint { position: absolute; bottom: 1.5rem; font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+.fc-controls { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
+.fc-btn-know { background: var(--brand-teal); color: var(--white); border: 2px solid var(--brand-navy); padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.2s; box-shadow: 2px 2px 0px var(--brand-navy); text-shadow: 1px 1px 0px var(--brand-navy); }
+.fc-btn-know:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0px var(--brand-navy); }
+.fc-btn-again { background: var(--brand-yellow); color: var(--brand-navy); border: 2px solid var(--brand-navy); padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.2s; box-shadow: 2px 2px 0px var(--brand-navy); }
+.fc-btn-again:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0px var(--brand-navy); }
+
+/* ── MINI REVIEWER ── */
+.reviewer-content { max-width: 800px; margin: 0 auto; }
+.chapter-nav { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.chap-btn { padding: 0.6rem 1.2rem; border-radius: 8px; border: 2px solid var(--brand-navy); background: var(--white); font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: 'Poppins', sans-serif; box-shadow: 2px 2px 0px var(--brand-navy); }
+.chap-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0px var(--brand-navy); }
+.chap-btn.active { background: var(--brand-purple); color: white; }
+.rev-card { background: var(--white); border: 2px solid var(--brand-navy); border-radius: 20px; padding: 2.5rem; margin-bottom: 2rem; box-shadow: 6px 6px 0px var(--brand-navy); }
+.rev-chapter-label { font-size: 0.8rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--brand-purple); margin-bottom: 1rem; }
+.rev-topic-title { font-weight: 800; font-size: 1.8rem; color: var(--brand-navy); margin-bottom: 1.5rem; }
+.rev-body { font-size: 1.05rem; color: var(--brand-navy); line-height: 1.8; font-weight: 500; }
+.rev-body p { margin-bottom: 1.2rem; }
+.rev-highlight { background: #FFF9F5; border: 2px solid var(--brand-navy); padding: 1.2rem 1.5rem; border-radius: 12px; margin: 1.5rem 0; font-size: 1rem; box-shadow: 4px 4px 0px rgba(30, 35, 75, 0.1); }
+.rev-highlight strong { color: var(--brand-purple); font-weight: 800; }
+.rev-table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.95rem; border: 2px solid var(--brand-navy); }
+.rev-table th { background: var(--brand-navy); color: white; padding: 1rem; text-align: left; font-weight: 700; border: 1px solid var(--brand-navy); }
+.rev-table td { padding: 1rem; border: 1px solid var(--brand-navy); font-weight: 500; }
+.rev-table tr:nth-child(even) td { background: var(--surface); }
+.rev-key-terms { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+.key-term-card { background: #F4F3FF; border: 2px solid var(--brand-navy); border-radius: 12px; padding: 1.2rem; }
+.key-term { font-weight: 800; font-size: 1rem; margin-bottom: 0.5rem; color: var(--brand-purple); }
+.key-def { font-size: 0.9rem; color: var(--brand-navy); line-height: 1.5; font-weight: 500; }
+
+/* ── PRACTICE QUESTIONS ── */
+.pq-area { max-width: 800px; margin: 0 auto; }
+.pq-score-bar { background: var(--white); border: 2px solid var(--brand-navy); border-radius: 16px; padding: 1.5rem 2rem; display: flex; justify-content: space-around; margin-bottom: 2rem; box-shadow: 4px 4px 0px var(--brand-navy); }
+.pq-score-stat { text-align: center; }
+.pq-score-n { font-weight: 800; font-size: 1.5rem; }
+.pq-score-l { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-top: 0.3rem; }
+.question-card { background: var(--white); border: 2px solid var(--brand-navy); border-radius: 20px; padding: 2.5rem; margin-bottom: 2rem; box-shadow: 6px 6px 0px var(--brand-navy); }
+.q-num { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--brand-purple); margin-bottom: 1rem; }
+.q-text { font-weight: 800; font-size: 1.3rem; color: var(--brand-navy); margin-bottom: 1.5rem; line-height: 1.5; }
+.q-options { display: flex; flex-direction: column; gap: 1rem; }
+.q-option { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; cursor: pointer; border: 2px solid var(--brand-navy); transition: all 0.2s; font-size: 1rem; font-weight: 600; background: var(--surface); box-shadow: 2px 2px 0px rgba(30, 35, 75, 0.1); }
+.q-option:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0px rgba(30, 35, 75, 0.2); }
+.q-option.selected-correct { border-color: var(--brand-navy); background: var(--brand-teal); color: white; text-shadow: 1px 1px 0px var(--brand-navy); }
+.q-option.selected-wrong { border-color: var(--brand-navy); background: var(--brand-red); color: white; text-shadow: 1px 1px 0px var(--brand-navy); }
+.q-option.reveal-correct { border-color: var(--brand-navy); background: var(--brand-teal); color: white; text-shadow: 1px 1px 0px var(--brand-navy); }
+.opt-letter { width: 30px; height: 30px; border-radius: 8px; background: rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; }
+.q-explanation { margin-top: 1.5rem; padding: 1.2rem 1.5rem; background: #F4F3FF; border-radius: 12px; font-size: 1rem; color: var(--brand-navy); border: 2px solid var(--brand-navy); font-weight: 500; }
+
+/* ── LOCKED SECTION ── */
+.locked-section { background: var(--white); border: 4px dashed var(--brand-navy); border-radius: 24px; padding: 5rem 2rem; text-align: center; margin-top: 2rem; }
+.lock-emoji { font-size: 4rem; margin-bottom: 1rem; }
+.locked-section h3 { font-weight: 800; font-size: 1.8rem; color: var(--brand-navy); margin-bottom: 1rem; }
+.locked-section p { color: var(--muted); font-size: 1.05rem; font-weight: 500; max-width: 500px; margin: 0 auto 2rem; line-height: 1.6; }
+.locked-price-tag { font-weight: 800; font-size: 2rem; color: var(--brand-navy); margin-bottom: 2rem; }
+.locked-price-tag small { font-size: 1rem; font-weight: 600; color: var(--muted); }
+.btn-unlock-big { display: inline-block; background: var(--brand-yellow); color: var(--brand-navy); padding: 1rem 2.5rem; border-radius: 12px; font-weight: 800; font-size: 1.1rem; text-decoration: none; transition: 0.2s; margin-bottom: 1rem; border: 2px solid var(--brand-navy); box-shadow: 4px 4px 0px var(--brand-navy); }
+.btn-unlock-big:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--brand-navy); }
+.locked-or { font-size: 0.9rem; font-weight: 700; color: var(--muted); margin: 1rem 0; text-transform: uppercase; }
+.btn-semester-link { display: inline-block; font-size: 1rem; color: var(--brand-purple); font-weight: 800; text-decoration: underline; }
+
+.preview-label { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--brand-yellow); color: var(--brand-navy); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 800; margin-bottom: 2rem; border: 2px solid var(--brand-navy); box-shadow: 2px 2px 0px var(--brand-navy); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">
+    <img src="images/logo-kits.png" alt="FlashPrep Kits Logo" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin', '🧠');">
+    <div>flashprep<span>kits</span></div>
+  </a>
+  <div class="nav-right">
+    <a href="dashboard.html" class="btn-back">← Dashboard</a>
+    <span class="nav-plan-badge" id="navBadge">Free Preview</span>
+    <a href="index.html#pricing-section" class="btn-upgrade-sm" id="navUpgrade">Upgrade Plan</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-subject">
+      <div class="s-icon">🌳</div>
+      <div>
+        <div class="s-name">Data Structures</div>
+        <div class="s-code">COSC 211 · IT Program</div>
+      </div>
+    </div>
+
+    <div class="kit-nav-label">Study Kits</div>
+    <div id="kitNavList"></div>
+
+    <div style="margin-top:2.5rem;margin-bottom:1rem;" class="kit-nav-label">Other Subjects</div>
+    <div class="subj-list">
+      <a class="subj-item active-subj" href="#"><span class="subj-dot subj-dot-active"></span>COSC 211 — DSA</a>
+      <a class="subj-item locked" id="netLink" href="#"><span class="subj-dot subj-dot-locked" id="netDot"></span>COSC 213 — Networks</a>
+      <a class="subj-item locked" id="dbLink" href="#"><span class="subj-dot subj-dot-locked" id="dbDot"></span>COSC 215 — DBMS</a>
+      <a class="subj-item locked" id="osLink" href="#"><span class="subj-dot subj-dot-locked" id="osDot"></span>COSC 221 — OS</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="reviewer-banner">
+      <div>
+        <div class="rb-subject">COSC 211 · NU Clark IT Program</div>
+        <div class="rb-title">Data Structures & Algorithms</div>
+        <div class="rb-sub">Prof. Santos · 2nd Semester AY 2024–2025</div>
+      </div>
+      <div class="rb-stats">
+        <div class="rb-stat"><div class="rb-n" id="unlockedCount">0</div><div class="rb-l">Kits Unlocked</div></div>
+        <div class="rb-stat"><div class="rb-n">5</div><div class="rb-l">Total Kits</div></div>
+        <div class="rb-stat"><div class="rb-n" id="progressPct">0%</div><div class="rb-l">Mastery</div></div>
+      </div>
+    </div>
+
+    <!-- KIT TABS -->
+    <div class="kit-tabs" id="kitTabs"></div>
+
+    <!-- CONTENT -->
+    <div class="content-area">
+
+      <!-- DEMO PLAN SWITCHER -->
+      <div class="plan-demo-bar">
+        <span>⚙️ Simulation Mode:</span>
+        <button class="plan-btn active" onclick="setPlan('free')">Free Preview</button>
+        <button class="plan-btn" onclick="setPlan('perkit')">Pay Per Kit</button>
+        <button class="plan-btn" onclick="setPlan('semester')">Semester Access</button>
+      </div>
+
+      <!-- FLASH CARDS PANEL -->
+      <div id="panel-flashcard" class="panel">
+        <div id="fc-content"></div>
+      </div>
+
+      <!-- MINI REVIEWER PANEL -->
+      <div id="panel-reviewer" class="panel" style="display:none">
+        <div id="rev-content"></div>
+      </div>
+
+      <!-- PRACTICE QUESTIONS PANEL -->
+      <div id="panel-practice" class="panel" style="display:none">
+        <div id="pq-content"></div>
+      </div>
+
+      <!-- CONCEPT MAP PANEL -->
+      <div id="panel-conceptmap" class="panel" style="display:none">
+        <div id="cm-content"></div>
+      </div>
+
+      <!-- CODING DRILLS PANEL -->
+      <div id="panel-coding" class="panel" style="display:none">
+        <div id="code-content"></div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const KITS = [
+  { id: 'flashcard', name: 'Flash Cards', icon: '🃏', price: 99 },
+  { id: 'reviewer', name: 'Mini Reviewer', icon: '📋', price: 129 },
+  { id: 'practice', name: 'Practice Questions', icon: '✏️', price: 149 },
+  { id: 'conceptmap', name: 'Concept Maps', icon: '🗺️', price: 99 },
+  { id: 'coding', name: 'Coding Drills', icon: '🖥️', price: 179 },
+];
+
+const PLAN_UNLOCKS = {
+  free: [],
+  perkit: ['flashcard', 'reviewer'],
+  semester: ['flashcard', 'reviewer', 'practice', 'conceptmap', 'coding'],
+};
+
+const FLASHCARDS = [
+  { q: 'What is a Binary Search Tree (BST)?', a: 'A tree data structure where each node has at most two children, and the left child is always less than the parent while the right child is always greater.', ans_brief: 'Ordered Tree Structure' },
+  { q: 'What is Big-O notation used for?', a: 'Big-O notation describes the worst-case time or space complexity of an algorithm, showing how performance scales as input size grows.', ans_brief: 'Algorithm Complexity Analysis' },
+  { q: 'Define a Stack data structure.', a: 'A linear data structure that follows Last In First Out (LIFO) order — the last element added is the first to be removed. Common operations: push, pop, peek.', ans_brief: 'LIFO Structure' },
+];
+
+const QUESTIONS = [
+  {
+    q: 'What is the worst-case time complexity of QuickSort?',
+    options: ['O(n)', 'O(n log n)', 'O(n²)', 'O(log n)'],
+    correct: 2,
+    explanation: 'QuickSort has a worst-case of O(n²) which occurs when the pivot is always the smallest or largest element (e.g., already sorted array with naïve pivot selection). Average case is O(n log n).'
+  },
+  {
+    q: 'Which data structure uses FIFO (First In, First Out) ordering?',
+    options: ['Stack', 'Queue', 'Tree', 'Hash Table'],
+    correct: 1,
+    explanation: 'A Queue follows FIFO order — elements are inserted at the rear and removed from the front. Think of it like a line at a cashier.'
+  }
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let currentPlan = 'free';
+let activeKit = 'flashcard';
+let fcIndex = 0;
+let fcFlipped = false;
+let answered = {};
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function isUnlocked(kitId) { return PLAN_UNLOCKS[currentPlan].includes(kitId); }
+
+function lockedHTML(kit) {
+  return `<div class="locked-section">
+    <div class="lock-emoji">🔒</div>
+    <h3>${kit.icon} ${kit.name} — Locked</h3>
+    <p>This study material is locked in your current plan. Unlock it to access complete resources for COSC 211.</p>
+    <div class="locked-price-tag">₱${kit.price} <small>/ subject</small></div>
+    <a href="index.html#pricing-section" class="btn-unlock-big">Unlock Kit</a>
+    <div class="locked-or">or</div>
+    <a href="index.html#pricing-section" class="btn-semester-link">Get Semester Access (All Kits for ₱999) →</a>
+  </div>`;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function setPlan(plan) {
+  currentPlan = plan;
+  document.querySelectorAll('.plan-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['free', 'perkit', 'semester'][i] === plan);
+  });
+  render();
+}
+
+function setKit(kitId) {
+  activeKit = kitId;
+  render();
+}
+
+function render() {
+  renderNavBadge();
+  renderKitNav();
+  renderKitTabs();
+  renderStats();
+  renderActivePanel();
+}
+
+function renderNavBadge() {
+  const badge = document.getElementById('navBadge');
+  const upgrade = document.getElementById('navUpgrade');
+  const labels = { free: 'Free Preview', perkit: 'Pay Per Kit', semester: 'Semester Access' };
+  badge.textContent = labels[currentPlan];
+  badge.className = 'nav-plan-badge';
+  if (currentPlan === 'semester') { badge.classList.add('badge-semester'); upgrade.style.display = 'none'; }
+  else if (currentPlan === 'perkit') { badge.classList.add('badge-perkit'); upgrade.style.display = ''; }
+  else { badge.classList.add('badge-free'); upgrade.style.display = ''; }
+}
+
+function renderKitNav() {
+  const el = document.getElementById('kitNavList');
+  el.innerHTML = KITS.map(k => {
+    const open = isUnlocked(k.id);
+    const active = activeKit === k.id;
+    return `<div class="kit-nav-item ${active ? 'active' : ''} ${!open ? 'locked-nav' : ''}" onclick="${open || currentPlan === 'free' ? `setKit('${k.id}')` : `window.location='index.html#pricing-section'`}">
+      <span class="kit-ico">${k.icon}</span>
+      <span class="kit-nav-name">${k.name}</span>
+      ${open ? '<span class="kit-nav-check">✓</span>' : '<span class="kit-nav-lock">🔒</span>'}
+    </div>`;
+  }).join('');
+
+  const hasOthers = currentPlan === 'semester';
+  ['net', 'db', 'os'].forEach(id => {
+    const link = document.getElementById(id + 'Link');
+    const dot = document.getElementById(id + 'Dot');
+    if (link && dot) {
+      link.className = `subj-item ${hasOthers ? '' : 'locked'}`;
+      dot.className = `subj-dot ${hasOthers ? 'subj-dot-active' : 'subj-dot-locked'}`;
+    }
+  });
+}
+
+function renderKitTabs() {
+  const el = document.getElementById('kitTabs');
+  el.innerHTML = KITS.map(k => {
+    const open = isUnlocked(k.id);
+    const active = activeKit === k.id;
+    return `<button class="k-tab ${active ? 'active' : ''} ${!open ? 'locked-tab' : ''}" onclick="setKit('${k.id}')">
+      ${k.icon} ${k.name}
+      ${!open ? '<span class="tab-lock">🔒</span>' : ''}
+    </button>`;
+  }).join('');
+}
+
+function renderStats() {
+  const count = PLAN_UNLOCKS[currentPlan].length;
+  document.getElementById('unlockedCount').textContent = count;
+  document.getElementById('progressPct').textContent = currentPlan === 'semester' ? '34%' : currentPlan === 'perkit' ? '18%' : '5%';
+}
+
+function renderActivePanel() {
+  document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+  document.getElementById(`panel-${activeKit}`).style.display = 'block';
+
+  if (activeKit === 'flashcard') renderFlashcards();
+  else if (activeKit === 'reviewer') renderReviewer();
+  else if (activeKit === 'practice') renderPractice();
+  else if (activeKit === 'conceptmap') renderConceptMap();
+  else if (activeKit === 'coding') renderCoding();
+}
+
+// ── FLASH CARDS ───────────────────────────────────────────────────────────────
+function renderFlashcards() {
+  const el = document.getElementById('fc-content');
+  const unlocked = isUnlocked('flashcard') || currentPlan === 'free';
+  const showCards = currentPlan === 'free' ? FLASHCARDS.slice(0, 2) : FLASHCARDS;
+  const card = showCards[fcIndex % showCards.length];
+
+  let html = `<div class="fc-area">`;
+
+  if (currentPlan === 'free') {
+    html += `<div class="preview-label">👁 Free Preview Mode — Viewing Cards 1–2 of 200</div>`;
+  }
+
+  html += `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; font-weight:800; font-size:0.9rem; color:var(--brand-purple);">
+        <span>Card ${fcIndex + 1} of ${showCards.length}</span>
+        <span>${Math.round(((fcIndex + 1) / showCards.length) * 100)}%</span>
+    </div>
+    <div class="fc-progress-bar">
+      <div class="fc-prog-fill" style="width:${Math.round(((fcIndex + 1) / showCards.length) * 100)}%"></div>
+    </div>
+    <div class="flashcard-container" onclick="flipCard()">
+      <div class="flashcard ${fcFlipped ? 'flipped' : ''}" id="theCard">
+        <div class="fc-face">
+          <span class="fc-hint">Question</span>
+          <div class="fc-word">${card.q}</div>
+          <div class="fc-tap-hint">Click card to flip</div>
+        </div>
+        <div class="fc-face fc-back">
+          <span class="fc-hint">Answer</span>
+          <div class="fc-word-back-ans">${card.ans_brief}</div>
+          <div class="fc-word-back">${card.a}</div>
+          <div class="fc-tap-hint">Click card to flip back</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-controls">
+      <button class="fc-btn-again" onclick="markCard('again')">Needs Review ↩</button>
+      <button class="fc-btn-know" onclick="markCard('know')">Got It ✓</button>
+    </div>
+  `;
+
+  if (currentPlan === 'free') {
+    html += `<div style="margin-top:4rem;">` + lockedHTML(KITS[0]).replace('Locked</h3>', 'Locked — 198 more cards</h3>') + `</div>`;
+  }
+
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+function flipCard() { fcFlipped = !fcFlipped; renderFlashcards(); }
+function markCard(action) {
+  fcFlipped = false;
+  const max = currentPlan === 'free' ? 2 : FLASHCARDS.length;
+  fcIndex = (fcIndex + 1) % max;
+  renderFlashcards();
+}
+
+// ── MINI REVIEWER ─────────────────────────────────────────────────────────────
+function renderReviewer() {
+  const el = document.getElementById('rev-content');
+  if (!isUnlocked('reviewer')) { el.innerHTML = lockedHTML(KITS[1]); return; }
+  el.innerHTML = `<div class="reviewer-content">
+    <div class="chapter-nav">
+      <button class="chap-btn active">Ch. 1: Intro</button>
+      <button class="chap-btn">Ch. 2: Arrays</button>
+      <button class="chap-btn">Ch. 3: Linked Lists</button>
+      <button class="chap-btn">Ch. 4: Stacks & Queues</button>
+      <button class="chap-btn">Ch. 5: Trees</button>
+    </div>
+    <div class="rev-card">
+      <div class="rev-chapter-label">Chapter 1 · Introduction</div>
+      <div class="rev-topic-title">What are Data Structures?</div>
+      <div class="rev-body">
+        <p>A <strong>data structure</strong> is a way of organizing and storing data in a computer so that it can be accessed and modified efficiently. The choice of the right data structure can dramatically reduce the computational complexity of algorithms.</p>
+        <div class="rev-highlight"><strong>💡 Key Concept:</strong> Different data structures are suited for different tasks. Understanding the trade-offs in time complexity (speed) and space complexity (memory) is the foundation of efficient software design.</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── PRACTICE QUESTIONS ────────────────────────────────────────────────────────
+function renderPractice() {
+  const el = document.getElementById('pq-content');
+  if (!isUnlocked('practice')) { el.innerHTML = lockedHTML(KITS[2]); return; }
+  const correct = Object.values(answered).filter(a => a === 'correct').length;
+  const total = Object.keys(answered).length;
+  let html = `<div class="pq-area">
+    <div class="pq-score-bar">
+      <div class="pq-score-stat"><div class="pq-score-n" style="color:var(--brand-teal)">${correct}</div><div class="pq-score-l">Correct</div></div>
+      <div class="pq-score-stat"><div class="pq-score-n" style="color:var(--brand-red)">${total - correct}</div><div class="pq-score-l">Wrong</div></div>
+      <div class="pq-score-stat"><div class="pq-score-n">${QUESTIONS.length - total}</div><div class="pq-score-l">Remaining</div></div>
+      <div class="pq-score-stat"><div class="pq-score-n" style="color:var(--brand-purple)">${total > 0 ? Math.round((correct/total)*100) : 0}%</div><div class="pq-score-l">Accuracy</div></div>
+    </div>`;
+
+  QUESTIONS.forEach((q, qi) => {
+    const ans = answered[qi];
+    html += `<div class="question-card">
+      <div class="q-num">Question ${qi + 1} of ${QUESTIONS.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">`;
+    q.options.forEach((opt, oi) => {
+      let cls = '';
+      if (ans !== undefined) {
+        if (oi === q.correct) cls = 'reveal-correct';
+        else if (ans === oi && oi !== q.correct) cls = 'selected-wrong';
+      }
+      html += `<div class="q-option ${cls}" onclick="answerQ(${qi}, ${oi})">
+        <span class="opt-letter">${String.fromCharCode(65+oi)}</span>
+        ${opt}
+      </div>`;
+    });
+    html += `</div>`;
+    if (ans !== undefined) html += `<div class="q-explanation">💡 <strong>Explanation:</strong> ${q.explanation}</div>`;
+    html += `</div>`;
+  });
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+function answerQ(qi, oi) {
+  if (answered[qi] !== undefined) return;
+  answered[qi] = oi === QUESTIONS[qi].correct ? 'correct' : oi;
+  renderPractice();
+}
+
+// ── CONCEPT MAP & CODING ───────────────────────────────────────────────────────
+function renderConceptMap() {
+  const el = document.getElementById('cm-content');
+  if (!isUnlocked('conceptmap')) { el.innerHTML = lockedHTML(KITS[3]); return; }
+  el.innerHTML = `
+    <div style="max-width:900px; margin: 0 auto; text-align: center; margin-bottom: 2rem;">
+      <h3 style="font-size: 2rem; font-weight: 800; color: var(--brand-navy); margin-bottom: 0.5rem;">Data Structures Ecosystem</h3>
+      <p style="font-size: 1rem; color: var(--muted); font-weight: 500;">How concepts interlock in COSC 211.</p>
+    </div>
+    
+    <div style="max-width:900px; margin: 0 auto; background: var(--white); border: 2px solid var(--brand-navy); box-shadow: 6px 6px 0px var(--brand-navy); border-radius: 20px; padding: 2rem; overflow-x: auto;">
+      <svg viewBox="0 0 800 450" style="width:100%; height:auto; min-width:600px;">
+        <!-- Connecting Lines -->
+        <line x1="400" y1="225" x2="200" y2="100" stroke="var(--brand-navy)" stroke-width="3" stroke-dasharray="8,6" />
+        <line x1="400" y1="225" x2="200" y2="350" stroke="var(--brand-navy)" stroke-width="3" stroke-dasharray="8,6" />
+        <line x1="400" y1="225" x2="600" y2="100" stroke="var(--brand-navy)" stroke-width="3" stroke-dasharray="8,6" />
+        <line x1="400" y1="225" x2="600" y2="350" stroke="var(--brand-navy)" stroke-width="3" stroke-dasharray="8,6" />
+
+        <!-- Center Node: DATA STRUCTURES -->
+        <rect x="306" y="196" width="188" height="68" rx="12" fill="var(--brand-navy)" />
+        <rect x="300" y="190" width="188" height="68" rx="12" fill="var(--brand-yellow)" stroke="var(--brand-navy)" stroke-width="3" />
+        <text x="394" y="223" text-anchor="middle" font-family="Poppins" font-weight="800" font-size="16" fill="var(--brand-navy)">DATA STRUCTURES</text>
+        <text x="394" y="243" text-anchor="middle" font-family="Poppins" font-weight="600" font-size="12" fill="var(--brand-navy)">COSC 211 Core</text>
+
+        <!-- Top Left: LINEAR -->
+        <rect x="104" y="66" width="192" height="68" rx="12" fill="var(--brand-navy)" />
+        <rect x="100" y="60" width="192" height="68" rx="12" fill="var(--white)" stroke="var(--brand-navy)" stroke-width="3" />
+        <text x="196" y="93" text-anchor="middle" font-family="Poppins" font-weight="800" font-size="16" fill="var(--brand-purple)">LINEAR</text>
+        <text x="196" y="113" text-anchor="middle" font-family="Poppins" font-weight="600" font-size="12" fill="var(--muted)">Array · Stack · Queue</text>
+
+        <!-- Bottom Left: NON-LINEAR -->
+        <rect x="104" y="316" width="192" height="68" rx="12" fill="var(--brand-navy)" />
+        <rect x="100" y="310" width="192" height="68" rx="12" fill="var(--white)" stroke="var(--brand-navy)" stroke-width="3" />
+        <text x="196" y="343" text-anchor="middle" font-family="Poppins" font-weight="800" font-size="16" fill="var(--brand-teal)">NON-LINEAR</text>
+        <text x="196" y="363" text-anchor="middle" font-family="Poppins" font-weight="600" font-size="12" fill="var(--muted)">Tree · Graph · Heap</text>
+
+        <!-- Top Right: SORTING -->
+        <rect x="504" y="66" width="192" height="68" rx="12" fill="var(--brand-navy)" />
+        <rect x="500" y="60" width="192" height="68" rx="12" fill="var(--white)" stroke="var(--brand-navy)" stroke-width="3" />
+        <text x="596" y="93" text-anchor="middle" font-family="Poppins" font-weight="800" font-size="16" fill="var(--brand-red)">SORTING</text>
+        <text x="596" y="113" text-anchor="middle" font-family="Poppins" font-weight="600" font-size="12" fill="var(--muted)">Merge · Quick · Bubble</text>
+
+        <!-- Bottom Right: COMPLEXITY -->
+        <rect x="504" y="316" width="192" height="68" rx="12" fill="var(--brand-navy)" />
+        <rect x="500" y="310" width="192" height="68" rx="12" fill="var(--white)" stroke="var(--brand-navy)" stroke-width="3" />
+        <text x="596" y="343" text-anchor="middle" font-family="Poppins" font-weight="800" font-size="16" fill="var(--brand-navy)">COMPLEXITY</text>
+        <text x="596" y="363" text-anchor="middle" font-family="Poppins" font-weight="600" font-size="12" fill="var(--muted)">Time · Space Analysis</text>
+      </svg>
+    </div>
+  `;
+}
+
+function renderCoding() {
+  const el = document.getElementById('code-content');
+  if (!isUnlocked('coding')) { el.innerHTML = lockedHTML(KITS[4]); return; }
+  el.innerHTML = `
+    <div style="max-width:850px; margin: 0 auto; background: var(--white); border: 2px solid var(--brand-navy); box-shadow: 6px 6px 0px var(--brand-navy); border-radius: 20px; overflow: hidden;">
+      
+      <!-- Drill Header -->
+      <div style="background: var(--brand-navy); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 6px solid var(--brand-yellow);">
+        <div>
+          <div style="font-size: 0.8rem; color: var(--brand-yellow); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">Drill 01 · Binary Search Tree</div>
+          <div style="font-size: 1.4rem; font-weight: 800; color: white;">Implement BST Insert in Java</div>
+        </div>
+        <span style="background: var(--brand-teal); color: white; font-size: 0.85rem; font-weight: 800; padding: 0.4rem 1rem; border-radius: 8px; border: 2px solid var(--brand-navy);">EASY</span>
+      </div>
+      
+      <div style="padding: 2.5rem 2rem;">
+        
+        <!-- Task Description -->
+        <p style="font-size: 1.05rem; color: var(--brand-navy); font-weight: 600; margin-bottom: 1.5rem;"><strong>Task:</strong> Implement the <code style="background: var(--surface); padding: 0.2rem 0.5rem; border: 1px solid var(--brand-navy); border-radius: 6px;">insert()</code> method for a Binary Search Tree. The method should recursively find the correct position and insert a new node.</p>
+        
+        <!-- IDE Editor Mock -->
+        <div style="background: #1E234B; border-radius: 12px; padding: 1.5rem; font-family: 'Courier New', monospace; font-size: 0.95rem; color: #E8EEFF; overflow-x: auto; margin-bottom: 3rem; border: 2px solid var(--brand-navy); box-shadow: 4px 4px 0px rgba(30,35,75,0.2);">
+<span style="color:#FFC83D">class</span> <span style="color:#3CC0A1">Node</span> {<br>
+&nbsp;&nbsp;<span style="color:#FFC83D">int</span> data;<br>
+&nbsp;&nbsp;<span style="color:#3CC0A1">Node</span> left, right;<br>
+&nbsp;&nbsp;<span style="color:#3CC0A1">Node</span>(<span style="color:#FFC83D">int</span> val) { data = val; }<br>
+}<br><br>
+<span style="color:#FFC83D">class</span> <span style="color:#3CC0A1">BST</span> {<br>
+&nbsp;&nbsp;<span style="color:#3CC0A1">Node</span> root;<br><br>
+&nbsp;&nbsp;<span style="color:#7C73F9">// 🎯 Your task: implement insert()</span><br>
+&nbsp;&nbsp;<span style="color:#3CC0A1">Node</span> insert(<span style="color:#3CC0A1">Node</span> root, <span style="color:#FFC83D">int</span> val) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7C73F9">// write your recursive logic here</span><br>
+&nbsp;&nbsp;}<br>
+}
+        </div>
+
+        <!-- Guided Solution Reveal -->
+        <div style="background: #E6FAF4; border: 2px solid var(--brand-teal); border-radius: 16px; padding: 2rem; position: relative; box-shadow: 4px 4px 0px rgba(60,192,161,0.2);">
+          <div style="position: absolute; top: -14px; left: 24px; background: var(--brand-teal); color: white; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; padding: 0.3rem 1rem; border-radius: 8px; border: 2px solid var(--brand-navy);">✅ Guided Solution</div>
+          
+          <div style="background: #1E234B; border-radius: 8px; padding: 1.2rem; font-family: 'Courier New', monospace; font-size: 0.9rem; color: #E8EEFF; margin-top: 0.5rem; border: 2px solid var(--brand-navy);">
+<span style="color:#3CC0A1">Node</span> insert(<span style="color:#3CC0A1">Node</span> root, <span style="color:#FFC83D">int</span> val) {<br>
+&nbsp;&nbsp;<span style="color:#FFC83D">if</span> (root == <span style="color:#FF7E7E">null</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#FFC83D">return new</span> <span style="color:#3CC0A1">Node</span>(val); <span style="color:#7C73F9">// base case: found empty spot</span><br>
+&nbsp;&nbsp;<span style="color:#FFC83D">if</span> (val &lt; root.data)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;root.left = insert(root.left, val);<br>
+&nbsp;&nbsp;<span style="color:#FFC83D">else if</span> (val &gt; root.data)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;root.right = insert(root.right, val);<br>
+&nbsp;&nbsp;<span style="color:#FFC83D">return</span> root;<br>
+}
+          </div>
+          
+          <p style="margin-top: 1.5rem; font-size: 0.95rem; color: var(--brand-navy); font-weight: 500; line-height: 1.6;"><strong>Why this works:</strong> The function recursively traverses left if the value is smaller than the current node, or right if it is larger. When it hits a <code>null</code> node, it creates and returns the new node, linking it back up the call stack.</p>
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

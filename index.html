@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlashPrep Kits — Prep Smart. Remember More.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand-navy: #1E234B;      
+  --brand-yellow: #FFC83D;    
+  --brand-purple: #7C73F9;    
+  --brand-teal: #3CC0A1;
+  --brand-red: #FF7E7E;
+  --surface: #F9FAFF;
+  --white: #FFFFFF;
+  --border: #1E234B;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {  
+  font-family: 'Poppins', sans-serif;  
+  background: var(--surface);  
+  color: var(--brand-navy);  
+  line-height: 1.6; 
+}
+
+/* --- NAVIGATION --- */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);  
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.8rem 6%; border-bottom: 2px solid var(--brand-navy);
+}
+.logo { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; font-weight: 800; color: var(--brand-navy); }
+.logo img { width: 34px; height: 34px; object-fit: contain; }
+.logo span { color: var(--brand-purple); }
+
+.nav-actions { display: flex; gap: 2rem; align-items: center; }
+.nav-link { text-decoration: none; color: var(--brand-navy); font-weight: 600; font-size: 0.9rem; }
+
+.btn-nav-cta { 
+  background: var(--brand-yellow); color: var(--brand-navy); border: 2px solid var(--brand-navy);
+  padding: 0.5rem 1.2rem; border-radius: 8px; font-weight: 700; text-decoration: none;
+  box-shadow: 2px 2px 0px var(--brand-navy); transition: 0.2s;
+}
+.btn-nav-cta:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0px var(--brand-navy); }
+
+/* --- HERO SECTION --- */
+.hero-wrap {  
+  background: var(--brand-navy); padding: 10rem 6% 8rem; color: white;
+  border-bottom: 8px solid var(--brand-yellow); text-align: center;
+}
+.hero-content { max-width: 900px; margin: 0 auto; }
+.hero h1 { font-size: clamp(2.5rem, 6vw, 4.2rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1.5px; }
+.hero h1 span { color: var(--brand-yellow); }
+
+.brain-logo {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.hero-stats { 
+  display: flex; justify-content: center; gap: 1.5rem; margin-top: 4rem; flex-wrap: wrap;
+}
+.stat-box {
+  background: rgba(255, 255, 255, 0.05); 
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 1.5rem 2rem; border-radius: 16px; min-width: 170px;
+}
+.stat-n { font-size: 2.2rem; font-weight: 800; color: var(--brand-yellow); display: block; line-height: 1; margin-bottom: 0.4rem; }
+.stat-l { font-size: 0.7rem; font-weight: 600; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
+
+.btn-primary {
+  background: var(--brand-yellow); color: var(--brand-navy); border: 2px solid var(--brand-navy);
+  padding: 1.1rem 2.8rem; border-radius: 12px; font-weight: 800; font-size: 1.1rem;
+  text-decoration: none; box-shadow: 4px 4px 0px #000; transition: 0.2s; display: inline-block; margin-top: 2rem;
+}
+.btn-primary:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #000; }
+
+/* --- SECTION: STUDY ANYTHING --- */
+.study-anything {
+  padding: 8rem 6%;
+  text-align: center;
+  background: #FFF9F5;
+}
+.study-anything h2 { font-size: 3rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--brand-navy); }
+.study-anything h2 span { color: var(--brand-yellow); }
+.study-anything p { max-width: 700px; margin: 0 auto; font-size: 1.1rem; color: var(--muted); }
+
+/* --- CORE FEATURES GRID --- */
+.features-grid-sec { padding: 8rem 8%; text-align: center; max-width: 1300px; margin: 0 auto; }
+.features-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+.f-card { background: var(--white); border: 2px solid var(--brand-navy); padding: 2.5rem; border-radius: 20px; box-shadow: 6px 6px 0px var(--brand-navy); text-align: left; }
+
+.pricing-sec { padding: 8rem 8%; background: #F8F8FC; }
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.75rem; }
+.pricing-card {
+  background: var(--white);
+  border: 1px solid rgba(30,35,75,0.12);
+  border-radius: 28px;
+  padding: 2.5rem;
+  box-shadow: 0 24px 60px rgba(30,35,75,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.pricing-card.featured {
+  background: var(--brand-navy);
+  color: white;
+  border-color: transparent;
+}
+.pricing-card.featured .pricing-header,
+.pricing-card.featured .pricing-price,
+.pricing-card.featured .pricing-list,
+.pricing-card.featured .pricing-note {
+  color: white;
+}
+.pricing-header { font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; margin-bottom: 1rem; color: var(--brand-purple); }
+.pricing-title { font-size: 2.75rem; font-weight: 900; margin-bottom: 0.5rem; line-height: 1; }
+.pricing-price { font-weight: 700; margin-bottom: 0.75rem; color: var(--brand-navy); }
+.pricing-meta { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+.pricing-list { list-style: none; padding: 0; margin: 0 0 2rem; color: var(--brand-navy); line-height: 1.9; font-weight: 600; }
+.pricing-list li { display: flex; align-items: center; gap: 0.75rem; }
+.pricing-list li span { font-size: 0.95rem; }
+.pricing-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.95rem 1.8rem;
+  font-weight: 800;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition: 0.2s;
+}
+.pricing-card.featured .pricing-btn {
+  background: var(--brand-yellow);
+  color: var(--brand-navy);
+}
+.pricing-card .pricing-btn {
+  background: var(--white);
+  color: var(--brand-navy);
+  border-color: rgba(30,35,75,0.12);
+}
+.pricing-tag { display: inline-block; background: var(--brand-yellow); color: var(--brand-navy); padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; margin-bottom: 1rem; }
+.pricing-note { font-size: 0.95rem; color: var(--muted); }
+
+/* --- SECTION: STUDY TO UNDERSTAND --- */
+.understand-sec {
+  padding: 8rem 8%;
+  background: var(--white);
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 5rem;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.understand-content h2 { font-size: 2.8rem; font-weight: 800; margin-bottom: 1rem; }
+.understand-content h2 span { color: var(--brand-yellow); }
+.understand-list { list-style: none; margin-top: 2rem; }
+.understand-list li { margin-bottom: 1.2rem; display: flex; align-items: center; gap: 1rem; font-weight: 600; }
+
+/* Mock UI for practice test */
+.mock-test-ui {
+  background: var(--white);
+  border: 2px solid var(--brand-navy);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 10px 10px 0px var(--brand-navy);
+}
+.test-header { font-size: 0.8rem; font-weight: 700; color: var(--brand-purple); margin-bottom: 1rem; }
+.question-text { font-size: 1.2rem; font-weight: 700; margin-bottom: 2rem; }
+.option-box {
+  background: #F4F3FF;
+  border: 1px solid rgba(30, 35, 75, 0.1);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.option-box:hover { background: var(--brand-violet-light); border-color: var(--brand-purple); }
+
+/* --- SYLLABUS ALIGNMENT SECTION --- */
+.mock-ui { 
+  background: var(--white); border: 2px solid var(--brand-navy); 
+  border-radius: 20px; padding: 2rem; box-shadow: 8px 8px 0px var(--brand-navy);
+}
+.mistake-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+.mistake-card { border: 2px solid var(--brand-navy); border-radius: 12px; padding: 1.2rem; text-align: center; }
+
+footer { background: var(--brand-navy); color: white; padding: 5rem 6%; text-align: center; border-top: 8px solid var(--brand-purple); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">
+    <img src="images/logo-kits.png" alt="FlashPrep Logo">
+    <div>flashprep<span>kits</span></div>
+  </a>
+  <div class="nav-actions">
+    <a href="#features" class="nav-link">Materials</a>
+    <a href="#mission" class="nav-link">Syllabus</a>
+    <a href="login.html" class="btn-nav-cta">Login</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-wrap">
+  <div class="hero-content">
+    <span class="brain-logo">🧠</span>
+    <h1>Prep Smart.<br><span>Remember More.</span></h1>
+    <p style="opacity: 0.7; font-size: 1.2rem; max-width: 700px; margin: 0 auto;">
+      The ultimate web-based study platform offering syllabus-aligned review materials for IT students at National University Clark.
+    </p>
+    
+    <a href="#pricing-section" class="btn-primary">Explore Study Kits</a> 
+
+    <div class="hero-stats">
+      <div class="stat-box">
+        <span class="stat-n">800+</span>
+        <span class="stat-l">NU Clark IT Students</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-n">100%</span>
+        <span class="stat-l">Syllabus Aligned</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-n">94%</span>
+        <span class="stat-l">Pass Rate</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: STUDY ANYTHING -->
+<section class="study-anything">
+  <h2>Study <span>Anything</span></h2>
+  <p>Perfect for any IT subject. Easily transform your <strong>Notes, Syllabus, and Lab requirements</strong> into a personalized study plan with FlashPrep Kits.</p>
+</section>
+
+<!-- FEATURES GRID -->
+<section class="features-grid-sec" id="features">
+  <div style="margin-bottom: 4rem;">
+    <h2 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; color: var(--brand-navy);">Review Smarter, Not Harder</h2>
+    <p style="color: var(--muted);">Essential study resources designed to minimize information overload.</p>
+  </div>
+  <div class="features-container">
+    <div class="f-card">
+      <div style="font-size: 2rem; margin-bottom: 1rem;">📋</div>
+      <h3 style="font-weight: 800; margin-bottom: 0.5rem;">Mini-Reviewers</h3>
+      <p style="font-size: 0.85rem; color: var(--muted);">Condensed topic summaries mapped to your chapter-by-chapter course outline.</p>
+    </div>
+    <div class="f-card">
+      <div style="font-size: 2rem; margin-bottom: 1rem;">✏️</div>
+      <h3 style="font-weight: 800; margin-bottom: 0.5rem;">Practice Questions</h3>
+      <p style="font-size: 0.85rem; color: var(--muted);">Questions that copy the structure of actual course assessments to improve exam scores.</p>
+    </div>
+    <div class="f-card">
+      <div style="font-size: 2rem; margin-bottom: 1rem;">📏</div>
+      <h3 style="font-weight: 800; margin-bottom: 0.5rem;">Formula Guides</h3>
+      <p style="font-size: 0.85rem; color: var(--muted);">Simplified references for your most technical IT subjects.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: STUDY TO UNDERSTAND -->
+<section class="understand-sec" id="understand">
+  <div class="mock-test-ui">
+    <div class="test-header">QUESTION 1 OF 10 · REQUIRED</div>
+    <div class="question-text">In Database Management Systems (COSC 215), which normal form ensures that all non-key attributes are fully functional dependent on the primary key?</div>
+    <div class="option-box">A. First Normal Form (1NF)</div>
+    <div class="option-box">B. Second Normal Form (2NF)</div>
+    <div class="option-box">C. Third Normal Form (3NF)</div>
+  </div>
+
+  <div class="understand-content">
+    <h2>Study To <span>Understand</span>, Not To Memorize</h2>
+    <p>Prepare for exams with personalized practice questions and instant AI-enhanced feedback designed to improve your academic performance.</p>
+    
+    <ul class="understand-list">
+      <li><span>🧩</span> Multiple Question Types</li>
+      <li><span>✨</span> Unique, Syllabus-Aligned Questions</li>
+      <li><span>✅</span> Instant Answer Explanations</li>
+      <li><span>♾️</span> Unlimited Practice Tests</li>
+    </ul>
+    
+    <a href="#" class="btn-primary" style="margin-top: 2rem;">Try For Free</a>
+  </div>
+</section>
+
+<!-- SYLLABUS MATCH -->
+<section id="mission" style="padding: 8rem 8%; background: white; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; max-width: 1400px; margin: 0 auto;">
+  <div>
+    <span style="color: var(--brand-purple); font-weight: 800; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Syllabus Match</span>
+    <h2 style="font-size: 2.5rem; font-weight: 800; margin: 1.5rem 0; color: var(--brand-navy);">Designed by <span>Professors</span></h2>
+    <p style="color: var(--muted); margin-bottom: 2rem;">
+      What makes FlashPrep different is it follows the syllabus of the professors at NU Clark. Materials are designed based on what is taught in your specific class.
+    </p>
+    <div style="display: flex; gap: 1rem;">
+       <div style="background: #F4F3FF; padding: 1rem; border-radius: 12px; font-weight: 700; font-size: 0.8rem; color: var(--brand-purple);">✓ Accuracy Guaranteed</div>
+       <div style="background: #F2FAF8; padding: 1rem; border-radius: 12px; font-weight: 700; font-size: 0.8rem; color: var(--brand-teal);">✓ Zero Overload</div>
+    </div>
+  </div>
+  <div class="mock-ui">
+    <div style="font-weight: 800; font-size: 0.75rem; color: var(--brand-purple); margin-bottom: 1rem;">SESSION PROGRESS</div>
+    <p style="font-weight: 700; font-size: 1.1rem; margin-bottom: 1.5rem;">Binary Search Tree (BST) Complexity?</p>
+    <div class="mistake-grid">
+      <div class="mistake-card" style="border-color: var(--brand-red); background: #FFF5F5;">
+        <span style="font-size: 0.6rem; font-weight: 800; color: var(--brand-red);">Your Answer</span>
+        <div style="font-weight: 800; color: var(--brand-red);">O(n)</div>
+      </div>
+      <div class="mistake-card" style="border-color: var(--brand-teal); background: #F2FAF8;">
+        <span style="font-size: 0.6rem; font-weight: 800; color: var(--brand-teal);">Correct Answer</span>
+        <div style="font-weight: 800; color: var(--brand-teal);">O(log n)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING SECTION -->
+<section class="pricing-sec" id="pricing-section">
+  <div style="max-width: 900px; margin: 0 auto 3rem; text-align: center;">
+    <div class="pricing-tag">Simple pricing</div>
+    <h2 class="section-heading">Choose the plan that fits your semester</h2>
+    <p class="section-text">Start with the free preview, unlock every kit with semester access, or pay per kit for the exact review tools you need.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-header">Free preview</div>
+      <div class="pricing-title">₱0</div>
+      <div class="pricing-meta">No payment needed · preview only</div>
+      <ul class="pricing-list">
+        <li>✓ Browse all IT subjects</li>
+        <li>✓ Preview 5 flash cards / subject</li>
+        <li>✓ 2 sample practice questions</li>
+        <li style="opacity:0.4;">✕ Full flash card decks</li>
+        <li style="opacity:0.4;">✕ Mini reviewers & concept maps</li>
+        <li style="opacity:0.4;">✕ Practice exam access</li>
+      </ul>
+      <a href="signup.html" class="pricing-btn">Create Free Account</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-tag" style="background: #FFC83D; color: var(--brand-navy);">Most Popular</div>
+      <div class="pricing-header">Semester all-access</div>
+      <div class="pricing-title" style="font-size: 3.2rem;">₱999</div>
+      <div class="pricing-meta">one-time · all subjects · all kit types</div>
+      <ul class="pricing-list" style="color: white; opacity: 0.95;">
+        <li>✓ All 12 IT subjects unlocked</li>
+        <li>✓ All 5 kit types per subject</li>
+        <li>✓ 200+ flash cards per subject</li>
+        <li>✓ Full practice exam bank</li>
+        <li>✓ All mini reviewers & concept maps</li>
+        <li>✓ Coding drills with solutions</li>
+        <li>✓ Progress dashboard + weak-topic flags</li>
+        <li>✓ Printable PDF versions</li>
+      </ul>
+      <a href="login.html" class="pricing-btn">Get Semester Access</a>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-header">Pay per kit</div>
+      <div class="pricing-title">₱99+</div>
+      <div class="pricing-meta">starting price · per kit · per subject</div>
+      <ul class="pricing-list">
+        <li>✓ Flash Cards — ₱99 / subject</li>
+        <li>✓ Mini Reviewers — ₱129 / subject</li>
+        <li>✓ Practice Questions — ₱149 / subject</li>
+        <li>✓ Concept Maps — ₱99 / subject</li>
+        <li>✓ Coding Drills — ₱179 / subject</li>
+        <li style="opacity:0.4;">✕ Progress dashboard</li>
+      </ul>
+      <a href="store.html" class="pricing-btn">Browse & Buy Kits</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="font-weight: 800; font-size: 1.5rem; margin-bottom: 1rem;">flashprep<span>kits</span></div>
+  <p style="opacity: 0.6; font-size: 0.9rem; max-width: 600px; margin: 0 auto;">
+    Helping students perform better through focused, organized, and easy-to-use study resources.
+  </p>
+  <p style="margin-top: 3rem; font-size: 0.7rem; opacity: 0.4;">© 2026 FlashPrep Kits · Built for NU Clark IT Students</p>
+</footer>
+
+</body>
+</html>

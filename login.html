@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log In — FlashPrep Kits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand-navy: #1E234B;      
+  --brand-yellow: #FFC83D;    
+  --brand-purple: #7C73F9;    
+  --brand-teal: #3CC0A1;
+  --brand-red: #FF7E7E;
+  --surface: #F9FAFF;
+  --white: #FFFFFF;
+  --muted: #6E7191;
+  --border: #1E234B;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+  font-family: 'Poppins', sans-serif; 
+  background: var(--surface); 
+  color: var(--brand-navy); 
+  min-height: 100vh; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+/* DECORATIVE BACKGROUND ELEMENTS */
+.bg-shape { position: fixed; z-index: -1; border: 4px solid var(--brand-navy); background: var(--white); }
+.shape-1 { width: 150px; height: 150px; border-radius: 50%; top: -50px; left: -50px; background: var(--brand-yellow); box-shadow: 6px 6px 0px var(--brand-navy); }
+.shape-2 { width: 100px; height: 100px; border-radius: 16px; bottom: 10%; right: 5%; background: var(--brand-teal); transform: rotate(15deg); box-shadow: 6px 6px 0px var(--brand-navy); }
+
+/* MAIN CONTAINER */
+.login-wrapper {
+  width: 100%;
+  max-width: 450px;
+}
+
+/* LOGO */
+.logo { display: flex; align-items: center; justify-content: center; gap: 0.8rem; text-decoration: none; font-weight: 800; font-size: 1.5rem; color: var(--brand-navy); margin-bottom: 2rem; }
+.logo img { width: 42px; height: 42px; object-fit: contain; }
+.logo span { color: var(--brand-purple); }
+
+/* LOGIN CARD */
+.login-card {
+  background: var(--white);
+  border: 4px solid var(--brand-navy);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  box-shadow: 12px 12px 0px var(--brand-navy);
+  text-align: center;
+}
+
+.login-card h1 { font-weight: 800; font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--brand-navy); }
+.login-card p { font-size: 0.95rem; color: var(--muted); font-weight: 500; margin-bottom: 2rem; }
+
+/* FORMS */
+.form-group { margin-bottom: 1.5rem; text-align: left; }
+.form-group label { display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--brand-navy); font-size: 0.9rem; }
+.form-control { 
+  width: 100%; 
+  padding: 1rem 1.2rem; 
+  border: 2px solid var(--brand-navy); 
+  border-radius: 12px; 
+  font-family: 'Poppins', sans-serif; 
+  font-size: 1rem; 
+  font-weight: 500; 
+  background: var(--surface);
+  transition: 0.2s;
+}
+.form-control:focus { outline: none; border-color: var(--brand-purple); background: var(--white); box-shadow: 4px 4px 0px var(--brand-purple); }
+
+/* OPTIONS (Forgot pass / Remember me) */
+.form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; font-size: 0.85rem; font-weight: 600; }
+.forgot-link { color: var(--brand-purple); text-decoration: none; }
+.forgot-link:hover { text-decoration: underline; }
+
+/* BUTTONS */
+.btn-primary { 
+  width: 100%;
+  background: var(--brand-yellow); 
+  color: var(--brand-navy); 
+  border: 2px solid var(--brand-navy);
+  padding: 1rem; 
+  border-radius: 12px; 
+  font-weight: 800; 
+  font-size: 1.1rem;
+  box-shadow: 4px 4px 0px var(--brand-navy); 
+  cursor: pointer;
+  transition: 0.2s;
+  font-family: 'Poppins', sans-serif;
+}
+.btn-primary:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--brand-navy); }
+
+/* FOOTER TEXT */
+.login-footer { margin-top: 1.5rem; font-size: 0.9rem; font-weight: 600; color: var(--muted); }
+.login-footer a { color: var(--brand-navy); font-weight: 800; text-decoration: none; }
+.login-footer a:hover { text-decoration: underline; }
+
+/* BACK TO HOME */
+.back-home { display: inline-block; margin-top: 2rem; font-size: 0.85rem; font-weight: 700; color: var(--muted); text-decoration: none; transition: 0.2s; }
+.back-home:hover { color: var(--brand-navy); }
+</style>
+</head>
+<body>
+
+<!-- Background Decorations -->
+<div class="bg-shape shape-1"></div>
+<div class="bg-shape shape-2"></div>
+
+<div class="login-wrapper">
+  
+  <a class="logo" href="index.html">
+    <img src="images/logo-kits.png" alt="FlashPrep Logo" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin', '🧠');">
+    <div>flashprep<span>kits</span></div>
+  </a>
+
+  <div class="login-card">
+    <h1>Welcome back! 👋</h1>
+    <p>Log in to pick up where you left off.</p>
+
+    <!-- Form uses JS to prevent default submission and redirect -->
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Student Email</label>
+        <input type="email" id="email" class="form-control" placeholder="juan@students.nu.edu.ph" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+      </div>
+
+      <div class="form-options">
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+          <input type="checkbox" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--brand-navy);"> Remember me
+        </label>
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn-primary">Sign In to Dashboard</button>
+    </form>
+
+    <div class="login-footer">
+      Don't have an account yet? <a href="signup.html">Create one</a>
+    </div>
+  </div>
+
+  <div style="text-align: center;">
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </div>
+
+</div>
+
+<script>
+  // Simple script to simulate logging in
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent the page from actually reloading
+    
+    // You can simulate a loading state here if you want
+    const btn = document.querySelector('.btn-primary');
+    btn.textContent = 'Logging in...';
+    btn.style.opacity = '0.8';
+
+    // Redirect to the dashboard after a short delay to make it feel real
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 500);
+  });
+</script>
+
+</body>
+</html>

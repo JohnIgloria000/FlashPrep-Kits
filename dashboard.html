@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — FlashPrep Kits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand-navy: #1E234B;      
+  --brand-yellow: #FFC83D;    
+  --brand-purple: #7C73F9;    
+  --brand-teal: #3CC0A1;
+  --brand-red: #FF7E7E;
+  --surface: #F9FAFF;
+  --white: #FFFFFF;
+  --muted: #6E7191;
+  --border: #1E234B;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { 
+  font-family: 'Poppins', sans-serif; 
+  background: var(--surface); 
+  color: var(--brand-navy); 
+  min-height: 100vh; 
+  line-height: 1.6;
+}
+
+/* --- NAVIGATION --- */
+nav {
+  position: sticky; top: 0; z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);  
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.8rem 4%; border-bottom: 2px solid var(--brand-navy);
+}
+.logo { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; font-weight: 800; font-size: 1.2rem; color: var(--brand-navy); cursor: pointer; }
+.logo img { width: 34px; height: 34px; object-fit: contain; }
+.logo span { color: var(--brand-purple); }
+
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.nav-plan-badge { font-size: 0.75rem; font-weight: 800; padding: 0.4rem 1rem; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px; border: 2px solid var(--brand-navy); box-shadow: 2px 2px 0px var(--brand-navy); }
+.badge-free { background: var(--surface); color: var(--muted); border-color: var(--muted); box-shadow: 2px 2px 0px var(--muted); }
+.badge-perkit { background: var(--brand-purple); color: white; }
+.badge-semester { background: var(--brand-yellow); color: var(--brand-navy); }
+
+.nav-user { display: flex; align-items: center; gap: 0.8rem; font-size: 0.9rem; font-weight: 600; }
+.av-sm { width: 38px; height: 38px; border-radius: 10px; background: var(--brand-navy); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; color: var(--brand-yellow); border: 2px solid var(--brand-navy); }
+
+.btn-upgrade { 
+  background: var(--brand-yellow); color: var(--brand-navy); border: 2px solid var(--brand-navy);
+  padding: 0.5rem 1.2rem; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.9rem;
+  box-shadow: 2px 2px 0px var(--brand-navy); transition: 0.2s; cursor: pointer;
+}
+.btn-upgrade:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0px var(--brand-navy); }
+
+/* --- LAYOUT --- */
+.layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 66px); }
+
+/* --- SIDEBAR --- */
+.sidebar { background: var(--white); border-right: 2px solid var(--brand-navy); padding: 2.5rem 1.5rem; position: sticky; top: 66px; height: calc(100vh - 66px); overflow-y: auto; }
+.sidebar-section { margin-bottom: 2.5rem; }
+.sidebar-label { font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--brand-purple); margin-bottom: 1rem; padding: 0 0.5rem; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.8rem 1rem; border-radius: 12px; cursor: pointer;
+  font-size: 0.9rem; font-weight: 600; color: var(--muted); text-decoration: none;
+  transition: all 0.2s; margin-bottom: 0.5rem; border: 2px solid transparent;
+}
+.sidebar-link:hover { color: var(--brand-navy); background: var(--surface); }
+.sidebar-link.active { background: var(--brand-yellow); color: var(--brand-navy); border-color: var(--brand-navy); box-shadow: 3px 3px 0px var(--brand-navy); }
+.sidebar-link .s-ico { font-size: 1.2rem; width: 24px; text-align: center; }
+
+.subject-link {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.6rem 0.75rem; border-radius: 8px; cursor: pointer;
+  font-size: 0.85rem; font-weight: 600; color: var(--brand-navy); text-decoration: none;
+  transition: all 0.2s; margin-bottom: 0.3rem; border: 2px solid transparent;
+}
+.subject-link:hover { background: var(--surface); border-color: var(--brand-navy); }
+.subject-link.locked { color: var(--muted); opacity: 0.6; }
+.subject-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; border: 2px solid var(--brand-navy); }
+.dot-active { background: var(--brand-teal); }
+.dot-locked { background: var(--surface); border-color: var(--muted); }
+
+.upgrade-box { background: var(--white); border: 2px solid var(--brand-navy); border-radius: 16px; padding: 1.5rem; box-shadow: 4px 4px 0px var(--brand-navy); margin-top: 2rem; text-align: center; }
+.upgrade-box p { font-size: 0.85rem; font-weight: 600; line-height: 1.5; margin-bottom: 1rem; }
+.upgrade-box a { display: block; background: var(--brand-yellow); color: var(--brand-navy); padding: 0.6rem; border-radius: 8px; font-weight: 800; text-decoration: none; border: 2px solid var(--brand-navy); cursor: pointer;}
+
+/* --- MAIN CONTENT --- */
+.main { padding: 3rem 4%; overflow-x: hidden; position: relative; }
+.view-section { display: none; animation: fadeIn 0.3s ease-in-out; }
+.view-section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* WELCOME BANNER */
+.welcome-banner { 
+  background: var(--brand-navy); border-radius: 24px; padding: 2.5rem; 
+  margin-bottom: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+  border-bottom: 8px solid var(--brand-yellow); color: white;
+}
+.wb-left h2 { font-weight: 800; font-size: 2rem; margin-bottom: 0.5rem; }
+.wb-left p { font-size: 1rem; opacity: 0.8; }
+.wb-right { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.wb-stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); padding: 1rem 1.5rem; border-radius: 12px; text-align: center; min-width: 130px; }
+.wb-num { font-weight: 800; font-size: 1.8rem; color: var(--brand-yellow); line-height: 1; }
+.wb-label { font-size: 0.75rem; font-weight: 600; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.4rem; }
+
+/* PLAN ALERT */
+.plan-alert {
+  border-radius: 16px; padding: 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1.5rem; margin-bottom: 2.5rem; flex-wrap: wrap;
+  border: 2px solid var(--brand-navy); box-shadow: 4px 4px 0px var(--brand-navy);
+}
+.plan-alert.free { background: var(--white); }
+.plan-alert.perkit { background: #F4F3FF; }
+.plan-alert.semester { background: #F2FAF8; }
+.pa-text { font-size: 0.95rem; }
+.pa-text strong { display: block; font-size: 1.1rem; margin-bottom: 0.2rem; font-weight: 800; }
+.pa-btn { font-weight: 800; padding: 0.6rem 1.5rem; border-radius: 8px; border: 2px solid var(--brand-navy); cursor: pointer; text-decoration: none; white-space: nowrap; transition: 0.2s; box-shadow: 2px 2px 0px var(--brand-navy); }
+.pa-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0px var(--brand-navy); }
+.pa-btn-gold { background: var(--brand-yellow); color: var(--brand-navy); }
+.pa-btn-success { background: var(--brand-teal); color: var(--brand-navy); }
+
+/* TABS (DEMO PLAN SELECTOR) */
+.tab-bar { display: flex; gap: 1rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+.tab { 
+  padding: 0.6rem 1.5rem; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: 0.2s; 
+  border: 2px solid var(--brand-navy); background: var(--white); color: var(--muted); font-family: 'Poppins', sans-serif;
+}
+.tab:hover { color: var(--brand-navy); }
+.tab.active { background: var(--brand-yellow); color: var(--brand-navy); box-shadow: 4px 4px 0px var(--brand-navy); }
+
+/* SECTION HEADERS */
+.dash-section { margin-bottom: 4rem; }
+.dash-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; border-bottom: 2px solid rgba(30, 35, 75, 0.1); padding-bottom: 1rem; }
+.dash-section-title { font-weight: 800; font-size: 1.5rem; color: var(--brand-navy); }
+.see-all { font-size: 0.9rem; font-weight: 700; color: var(--brand-purple); text-decoration: none; cursor: pointer; }
+
+/* KIT CARDS GRID */
+.kit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+.k-card { background: var(--white); border: 2px solid var(--brand-navy); border-radius: 20px; padding: 2rem; position: relative; transition: 0.2s; box-shadow: 6px 6px 0px var(--brand-navy); display: flex; flex-direction: column; }
+.k-card.unlocked:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--brand-navy); }
+.k-card.locked { opacity: 0.7; box-shadow: none; border: 2px dashed var(--muted); background: var(--surface); }
+.k-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.k-subject { font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--brand-purple); margin-bottom: 0.5rem; }
+.k-name { font-weight: 800; font-size: 1.2rem; margin-bottom: 0.5rem; }
+.k-meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; font-weight: 500; }
+.k-progress-wrap { margin-bottom: 1.5rem; margin-top: auto; }
+.k-progress-label { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+.k-prog-bg { height: 8px; background: var(--surface); border-radius: 10px; border: 1px solid var(--brand-navy); overflow: hidden; }
+.k-prog-fill { height: 100%; border-right: 1px solid var(--brand-navy); transition: width 0.5s; background: var(--brand-teal); }
+
+.k-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+.k-status { font-size: 0.85rem; font-weight: 700; }
+.k-status.open { color: var(--brand-teal); }
+.k-status.locked { color: var(--muted); }
+
+.btn-card { font-size: 0.85rem; font-weight: 800; padding: 0.5rem 1.2rem; border-radius: 8px; border: 2px solid var(--brand-navy); cursor: pointer; text-decoration: none; transition: 0.2s; box-shadow: 2px 2px 0px var(--brand-navy); }
+.btn-card:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0px var(--brand-navy); }
+.btn-card-open { background: var(--white); color: var(--brand-navy); }
+.btn-card-unlock { background: var(--brand-yellow); color: var(--brand-navy); }
+
+/* RECENT ACTIVITY */
+.activity-list { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.activity-item { background: var(--white); border: 2px solid var(--brand-navy); border-radius: 16px; padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 1.5rem; box-shadow: 4px 4px 0px rgba(30, 35, 75, 0.05); }
+.act-icon { font-size: 1.8rem; flex-shrink: 0; background: var(--surface); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 12px; border: 2px solid var(--brand-navy); }
+.act-info { flex: 1; }
+.act-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+.act-sub { font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+.act-score { font-weight: 800; font-size: 1.2rem; padding: 0.4rem 0.8rem; border-radius: 8px; border: 2px solid var(--brand-navy); box-shadow: 2px 2px 0px var(--brand-navy); }
+.score-good { background: var(--brand-teal); color: var(--white); text-shadow: 1px 1px 0px var(--brand-navy); }
+.score-mid { background: var(--brand-yellow); color: var(--brand-navy); }
+
+/* SUBJECT PROGRESS LIST */
+.subject-progress-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media(max-width: 1100px) { .subject-progress-list { grid-template-columns: 1fr; } }
+.sp-item { background: var(--white); border: 2px solid var(--brand-navy); border-radius: 16px; padding: 1.5rem; box-shadow: 4px 4px 0px var(--brand-navy); }
+.sp-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.sp-name { font-weight: 800; font-size: 1.1rem; }
+.sp-pct { font-weight: 800; font-size: 1.1rem; color: var(--brand-purple); }
+.sp-bg { height: 10px; background: var(--surface); border-radius: 10px; border: 1px solid var(--brand-navy); overflow: hidden; }
+.sp-fill { height: 100%; background: var(--brand-purple); border-right: 1px solid var(--brand-navy); }
+.sp-kits { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+.sp-kit-pill { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 6px; border: 1px solid var(--brand-navy); }
+.pill-open { background: var(--brand-teal); color: var(--white); text-shadow: 1px 1px 0px rgba(0,0,0,0.2); }
+.pill-locked { background: var(--surface); color: var(--muted); border-style: dashed; }
+
+/* MODALS */
+.modal-overlay { position: fixed; inset: 0; background: rgba(30, 35, 75, 0.8); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; }
+.modal-content { background: var(--white); border: 4px solid var(--brand-navy); border-radius: 24px; padding: 3rem 2.5rem; width: 90%; max-width: 450px; text-align: center; box-shadow: 12px 12px 0px var(--brand-navy); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+.modal-content h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+.modal-content p { font-size: 1rem; color: var(--muted); margin-bottom: 2.5rem; font-weight: 500; }
+.modal-actions { display: flex; gap: 1rem; justify-content: center; }
+.btn-modal-cancel { background: var(--surface); border: 2px solid var(--brand-navy); padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; box-shadow: 2px 2px 0px var(--brand-navy); }
+.btn-modal-confirm { background: var(--brand-yellow); color: var(--brand-navy); border: 2px solid var(--brand-navy); padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; box-shadow: 2px 2px 0px var(--brand-navy); }
+.btn-modal-cancel:hover, .btn-modal-confirm:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0px var(--brand-navy); }
+
+/* FORMS (FOR ADD TASK MODAL) */
+.form-group { margin-bottom: 1.5rem; text-align: left; }
+.form-group label { display: block; font-weight: 800; margin-bottom: 0.5rem; color: var(--brand-navy); font-size: 0.9rem;}
+.form-group input { width: 100%; padding: 0.8rem; border: 2px solid var(--brand-navy); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 500; }
+.form-group input:focus { outline: none; border-color: var(--brand-purple); box-shadow: 2px 2px 0px var(--brand-purple); }
+
+/* PLANNER UI */
+.planner-day { margin-bottom: 2.5rem; }
+.planner-day-title { font-size: 1.2rem; font-weight: 800; color: var(--brand-purple); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--brand-navy); padding-bottom: 0.5rem;}
+.task-item { background: var(--white); border: 2px solid var(--brand-navy); border-radius: 16px; padding: 1.2rem 1.5rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; box-shadow: 4px 4px 0px var(--brand-navy); transition: 0.2s; }
+.task-item:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--brand-navy); }
+.task-left { display: flex; align-items: center; gap: 1rem; }
+.task-check { width: 28px; height: 28px; border: 2px solid var(--brand-navy); border-radius: 8px; cursor: pointer; background: var(--surface); display: flex; align-items: center; justify-content: center; transition: 0.2s;}
+.task-check.done { background: var(--brand-teal); border-color: var(--brand-navy); }
+.task-check.done::after { content: '✓'; color: white; font-weight: 900; font-size: 1.2rem; }
+.task-text { font-weight: 700; font-size: 1.1rem; transition: 0.2s;}
+.task-check.done + div .task-text { text-decoration: line-through; opacity: 0.5; }
+.task-sub { font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+.task-time { font-weight: 800; background: var(--brand-yellow); padding: 0.3rem 0.8rem; border-radius: 8px; border: 2px solid var(--brand-navy); font-size: 0.85rem; }
+
+/* REVIEWER UI (Flashcards) */
+.reviewer-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+.btn-back { display: flex; align-items: center; gap: 0.5rem; font-weight: 800; text-decoration: none; color: var(--brand-navy); background: var(--white); border: 2px solid var(--brand-navy); padding: 0.5rem 1rem; border-radius: 8px; box-shadow: 2px 2px 0px var(--brand-navy); cursor: pointer; }
+.flashcard-container { perspective: 1000px; max-width: 700px; margin: 0 auto 3rem; cursor: pointer; }
+.flashcard { width: 100%; min-height: 350px; position: relative; transition: transform 0.6s; transform-style: preserve-3d; }
+.flashcard.flipped { transform: rotateY(180deg); }
+.flashcard-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: var(--white); border: 4px solid var(--brand-navy); border-radius: 24px; padding: 3rem; box-shadow: 12px 12px 0px var(--brand-navy); }
+.flashcard-back { transform: rotateY(180deg); background: #F4F3FF; }
+.fc-tag { position: absolute; top: 1.5rem; left: 1.5rem; font-size: 0.8rem; font-weight: 800; color: var(--brand-purple); text-transform: uppercase; letter-spacing: 1px; }
+.fc-content { font-size: 1.8rem; font-weight: 800; line-height: 1.4; }
+.fc-hint { position: absolute; bottom: 1.5rem; font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+.reviewer-controls { display: flex; justify-content: center; gap: 1rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" onclick="setView('dashboard')">
+    <img src="images/logo-kits.png" alt="FlashPrep Logo" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin', '🧠');">
+    <div>flashprep<span>kits</span></div>
+  </a>
+  <div class="nav-right">
+    <span class="nav-plan-badge" id="planBadge">Free Plan</span>
+    <div class="nav-user">
+      <div class="av-sm">JD</div>
+      <span>Juan dela Cruz</span>
+    </div>
+    <a onclick="setView('dashboard')" class="btn-upgrade" id="upgradeBtn">Upgrade</a>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Menu</div>
+      <a class="sidebar-link active" id="link-dashboard" onclick="setView('dashboard')">
+        <span class="s-ico">📊</span> Dashboard
+      </a>
+
+      <a class="sidebar-link" href="reviewer.html">
+        <span class="s-ico">📖</span> Study Reviewer
+      </a>
+      
+      <a class="sidebar-link" id="link-progress" onclick="setView('progress')">
+        <span class="s-ico">🎯</span> My Progress
+      </a>
+      <a class="sidebar-link" id="link-planner" onclick="setView('planner')">
+        <span class="s-ico">📅</span> Study Planner
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">My Subjects</div>
+      <div id="sidebarSubjects">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <div id="upgradeBoxSidebar"></div>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="main" id="mainContainer">
+
+    <!-- VIEW 1: DASHBOARD -->
+    <div id="view-dashboard" class="view-section active">
+      
+      <div class="tab-bar">
+        <button class="tab active" onclick="setPlan('free')">Simulate: Free Preview</button>
+        <button class="tab" onclick="setPlan('perkit')">Simulate: Pay Per Kit</button>
+        <button class="tab" onclick="setPlan('semester')">Simulate: Semester Access</button>
+      </div>
+
+      <div class="welcome-banner">
+        <div class="wb-left">
+          <h2>Hello, Juan! 👋</h2>
+          <p id="welcomeSub">Select your plan to unlock your study kits.</p>
+        </div>
+        <div class="wb-right" id="wbStats"></div>
+      </div>
+
+      <div class="plan-alert" id="planAlert"></div>
+
+      <div class="dash-section">
+        <div class="dash-section-head">
+          <div class="dash-section-title">My Study Kits</div>
+          <span class="see-all" onclick="setView('progress')">View Full Progress →</span>
+        </div>
+        <div class="kit-grid" id="kitGrid"></div>
+      </div>
+
+      <div class="dash-section">
+        <div class="dash-section-head">
+          <div class="dash-section-title">Recent Activity</div>
+        </div>
+        <div class="activity-list" id="activityList"></div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: MY PROGRESS -->
+    <div id="view-progress" class="view-section">
+      <div class="dash-section-head">
+        <div class="dash-section-title">Detailed Subject Progress</div>
+      </div>
+      <p style="margin-bottom: 2rem; color: var(--muted); font-size: 1.1rem; font-weight: 500;">Track your mastery across all enrolled courses.</p>
+      <div class="subject-progress-list" id="subjectProgressPage"></div>
+    </div>
+
+    <!-- VIEW 3: STUDY PLANNER -->
+    <div id="view-planner" class="view-section">
+      <div class="dash-section-head">
+        <div class="dash-section-title">Weekly Study Planner</div>
+        <button class="btn-card btn-card-unlock" onclick="openAddTaskModal()">+ Add Task</button>
+      </div>
+      
+      <!-- Injected by JS -->
+      <div id="plannerContainer"></div>
+    </div>
+
+    <!-- VIEW 4: OPEN REVIEWER -->
+    <div id="view-reviewer" class="view-section">
+      <div class="reviewer-header">
+        <button class="btn-back" onclick="setView('dashboard')">← Back to Dashboard</button>
+        <h2 id="reviewerTitle" style="font-weight: 800; color: var(--brand-navy);">COSC 211 - Flash Cards</h2>
+      </div>
+
+      <div class="flashcard-container" onclick="document.getElementById('fc').classList.toggle('flipped')">
+        <div class="flashcard" id="fc">
+          <div class="flashcard-face">
+            <span class="fc-tag">Question 1 / 200</span>
+            <div class="fc-content" id="fc-q">What is the time complexity of a Binary Search Tree (BST) in the worst case?</div>
+            <div class="fc-hint">Click to flip card</div>
+          </div>
+          <div class="flashcard-face flashcard-back">
+            <span class="fc-tag">Answer</span>
+            <div class="fc-content" style="color: var(--brand-teal);" id="fc-a">O(n)</div>
+            <div style="margin-top: 1.5rem; font-weight: 600; color: var(--muted); font-size: 1rem;">This happens when the tree is highly unbalanced (like a linked list).</div>
+            <div class="fc-hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reviewer-controls">
+        <button class="pa-btn pa-btn-gold" style="font-size: 1.1rem;">I forgot this</button>
+        <button class="pa-btn pa-btn-success" style="font-size: 1.1rem;">I knew this</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- UNLOCK KIT MODAL -->
+<div class="modal-overlay" id="unlockModal">
+  <div class="modal-content">
+    <span class="modal-icon">🔓</span>
+    <h3>Unlock Kit</h3>
+    <p>Are you sure you want to unlock <strong id="modalKitName" style="color: var(--brand-purple);"></strong> for <strong id="modalKitPrice" style="color: var(--brand-navy);"></strong>?</p>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-confirm" onclick="confirmUnlock()">Confirm Purchase</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="addTaskModal">
+  <div class="modal-content" style="max-width: 500px;">
+    <span class="modal-icon">📅</span>
+    <h3>Add New Task</h3>
+    <div class="form-group">
+      <label>Task Name</label>
+      <input type="text" id="newTaskName" placeholder="e.g., Read Chapter 5">
+    </div>
+    <div class="form-group">
+      <label>Subject & Kit</label>
+      <input type="text" id="newTaskSub" placeholder="e.g., COSC 211 • Mini Reviewer">
+    </div>
+    <div class="form-group">
+      <label>Time</label>
+      <input type="time" id="newTaskTime" value="14:00">
+    </div>
+    <div class="modal-actions" style="margin-top: 2rem;">
+      <button class="btn-modal-cancel" onclick="closeAddTaskModal()">Cancel</button>
+      <button class="btn-modal-confirm" onclick="confirmAddTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const SUBJECTS = [
+  { code: 'COSC 211', name: 'Data Structures & Algorithms', icon: '🌳', progress: 62 },
+  { code: 'COSC 213', name: 'Computer Networks', icon: '🌐', progress: 38 },
+  { code: 'COSC 215', name: 'Database Management', icon: '🗄️', progress: 81 },
+  { code: 'COSC 221', name: 'Operating Systems', icon: '💾', progress: 20 },
+];
+
+const KIT_TYPES = [
+  { id: 'flashcard', name: 'Flash Cards', icon: '🃏', desc: '200 cards · Spaced repetition', price: 99 },
+  { id: 'reviewer', name: 'Mini Reviewer', icon: '📋', desc: '12 chapters · Printable PDF', price: 129 },
+  { id: 'practice', name: 'Practice Questions', icon: '✏️', desc: '100 questions · With answers', price: 149 },
+  { id: 'conceptmap', name: 'Concept Maps', icon: '🗺️', desc: 'Visual topic linkages', price: 99 },
+  { id: 'coding', name: 'Coding Drills', icon: '🖥️', desc: '30 drills · Java & Python', price: 179 },
+];
+
+const PLAN_KITS = {
+  free: {},
+  perkit: {
+    'COSC 211': ['flashcard', 'reviewer'],
+    'COSC 213': ['practice'],
+    'COSC 215': ['flashcard', 'practice', 'reviewer'],
+    'COSC 221': [],
+  },
+  semester: {
+    'COSC 211': ['flashcard', 'reviewer', 'practice', 'conceptmap', 'coding'],
+    'COSC 213': ['flashcard', 'reviewer', 'practice', 'conceptmap', 'coding'],
+    'COSC 215': ['flashcard', 'reviewer', 'practice', 'conceptmap', 'coding'],
+    'COSC 221': ['flashcard', 'reviewer', 'practice', 'conceptmap', 'coding'],
+  }
+};
+
+const ACTIVITY = [
+  { icon: '🃏', title: 'Flash Cards — COSC 211', sub: 'Reviewed 25 cards · BST & Graph Traversal', score: '92%', cls: 'score-good' },
+  { icon: '✏️', title: 'Practice Exam — COSC 215', sub: 'Prelim Mock Test · DBMS Normalization', score: '76%', cls: 'score-mid' },
+  { icon: '📋', title: 'Mini Reviewer — COSC 211', sub: 'Read Chapter 4: Sorting Algorithms', score: null },
+  { icon: '✏️', title: 'Practice Exam — COSC 213', sub: 'OSI Model Quiz · Networks', score: '88%', cls: 'score-good' },
+];
+
+let PLANNER_DATA = [
+  { 
+    day: 'Today — Monday', 
+    tasks: [
+      { title: 'Review Graph Traversals', sub: 'COSC 211 • Flash Cards', time: '4:00 PM', done: false },
+      { title: 'Read Normalization Ch. 3', sub: 'COSC 215 • Mini Reviewer', time: '10:00 AM', done: true }
+    ]
+  },
+  { 
+    day: 'Tomorrow — Tuesday', 
+    tasks: [
+      { title: 'Take Mock Prelim Exam', sub: 'COSC 213 • Practice Questions', time: '2:00 PM', done: false }
+    ]
+  }
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let currentPlan = 'free';
+let pendingUnlock = null;
+
+// ── NAVIGATION / VIEWS ─────────────────────────────────────────────────────────
+function setView(viewId) {
+  document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + viewId).classList.add('active');
+  document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+  if(document.getElementById('link-' + viewId)) {
+    document.getElementById('link-' + viewId).classList.add('active');
+  }
+  window.scrollTo(0,0);
+}
+
+function openReviewer(subCode, kitName) {
+  document.getElementById('reviewerTitle').textContent = `${subCode} - ${kitName}`;
+  document.getElementById('fc').classList.remove('flipped');
+  setView('reviewer');
+}
+
+// ── UNLOCK MODAL LOGIC ─────────────────────────────────────────────────────────
+function openUnlockModal(subCode, kitId, kitName, price) {
+  pendingUnlock = { subCode, kitId, price };
+  document.getElementById('modalKitName').textContent = `${subCode} ${kitName}`;
+  document.getElementById('modalKitPrice').textContent = `₱${price}`;
+  document.getElementById('unlockModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('unlockModal').style.display = 'none';
+  pendingUnlock = null;
+}
+
+function confirmUnlock() {
+  if (pendingUnlock) {
+    if (currentPlan === 'free') currentPlan = 'perkit'; 
+    if (!PLAN_KITS.perkit[pendingUnlock.subCode]) PLAN_KITS.perkit[pendingUnlock.subCode] = [];
+    if (!PLAN_KITS.perkit[pendingUnlock.subCode].includes(pendingUnlock.kitId)) {
+      PLAN_KITS.perkit[pendingUnlock.subCode].push(pendingUnlock.kitId);
+    }
+    setPlan(currentPlan); 
+    closeModal();
+  }
+}
+
+// ── ADD TASK MODAL LOGIC ───────────────────────────────────────────────────────
+function openAddTaskModal() {
+  document.getElementById('addTaskModal').style.display = 'flex';
+}
+
+function closeAddTaskModal() {
+  document.getElementById('addTaskModal').style.display = 'none';
+  document.getElementById('newTaskName').value = '';
+  document.getElementById('newTaskSub').value = '';
+  document.getElementById('newTaskTime').value = '14:00';
+}
+
+function confirmAddTask() {
+  const title = document.getElementById('newTaskName').value || 'New Task';
+  const sub = document.getElementById('newTaskSub').value || 'General Review';
+  const timeRaw = document.getElementById('newTaskTime').value;
+
+  let time = timeRaw;
+  if (timeRaw) {
+    const [h, m] = timeRaw.split(':');
+    const hours = parseInt(h);
+    const suffix = hours >= 12 ? 'PM' : 'AM';
+    const formattedH = hours % 12 || 12;
+    time = `${formattedH}:${m} ${suffix}`;
+  } else {
+    time = 'Anytime';
+  }
+
+  // Push task to "Today" for prototyping purposes
+  PLANNER_DATA[0].tasks.push({ title: title, sub: sub, time: time, done: false });
+  
+  renderPlanner();
+  closeAddTaskModal();
+}
+
+function toggleTask(dayIdx, taskIdx) {
+  PLANNER_DATA[dayIdx].tasks[taskIdx].done = !PLANNER_DATA[dayIdx].tasks[taskIdx].done;
+  renderPlanner();
+}
+
+// ── RENDER ENGINE ──────────────────────────────────────────────────────────────
+function setPlan(plan) {
+  currentPlan = plan;
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['free', 'perkit', 'semester'][i] === plan);
+  });
+  render();
+}
+
+function isKitUnlocked(subjectCode, kitId) {
+  if (currentPlan === 'semester') return true;
+  if (currentPlan === 'free') return false;
+  const unlocked = PLAN_KITS['perkit'][subjectCode] || [];
+  return unlocked.includes(kitId);
+}
+
+function render() {
+  renderPlanBadge();
+  renderWelcome();
+  renderPlanAlert();
+  renderKits();
+  renderSubjectProgress();
+  renderSidebar();
+  renderActivity();
+  renderPlanner();
+  renderUpgradeBox();
+}
+
+function renderPlanBadge() {
+  const badge = document.getElementById('planBadge');
+  const upgradeBtn = document.getElementById('upgradeBtn');
+  const labels = { free: 'Free Preview', perkit: 'Pay Per Kit', semester: 'Semester Access' };
+  badge.textContent = labels[currentPlan];
+  badge.className = 'nav-plan-badge';
+  if (currentPlan === 'free') badge.classList.add('badge-free');
+  else if (currentPlan === 'perkit') badge.classList.add('badge-perkit');
+  else { badge.classList.add('badge-semester'); upgradeBtn.style.display = 'none'; return; }
+  upgradeBtn.style.display = '';
+}
+
+function renderWelcome() {
+  const subs = {
+    free: 'You\'re currently on the Free Preview. Upgrade to unlock more kits.',
+    perkit: 'You have selected kits unlocked. Keep up the review momentum!',
+    semester: 'Full semester access active. All kits unlocked — time to study smart! 🧠'
+  };
+  document.getElementById('welcomeSub').textContent = subs[currentPlan];
+
+  let totalUnlocked = 0;
+  if(currentPlan === 'semester') totalUnlocked = 20;
+  else if (currentPlan === 'perkit') {
+      Object.values(PLAN_KITS.perkit).forEach(arr => totalUnlocked += arr.length);
+  }
+
+  const statsMap = {
+    free: [{ n: '0', l: 'Kits Unlocked' }, { n: '0', l: 'Cards Reviewed' }],
+    perkit: [{ n: totalUnlocked, l: 'Kits Unlocked' }, { n: '142', l: 'Cards Reviewed' }],
+    semester: [{ n: '20', l: 'Kits Unlocked' }, { n: '387', l: 'Cards Reviewed' }, { n: '74%', l: 'Avg Score' }],
+  };
+  const stats = statsMap[currentPlan];
+  document.getElementById('wbStats').innerHTML = stats.map(s =>
+    `<div class="wb-stat"><div class="wb-num">${s.n}</div><div class="wb-label">${s.l}</div></div>`
+  ).join('');
+}
+
+function renderPlanAlert() {
+  const el = document.getElementById('planAlert');
+  if (currentPlan === 'free') {
+    el.className = 'plan-alert free';
+    el.innerHTML = `<div class="pa-text"><strong>Preview Mode Active</strong>Explore the platform with limited access. Upgrade to unlock full flash card decks and mini reviewers.</div><a onclick="setPlan('semester')" class="pa-btn pa-btn-gold">Get Semester Plan</a>`;
+  } else if (currentPlan === 'perkit') {
+    el.className = 'plan-alert perkit';
+    el.innerHTML = `<div class="pa-text"><strong>Pay Per Kit Active</strong>You have unlocked specific kits for your subjects. Need more? Add them directly from the dashboard.</div><a onclick="setPlan('semester')" class="pa-btn pa-btn-gold">Upgrade to Semester</a>`;
+  } else {
+    el.className = 'plan-alert semester';
+    el.innerHTML = `<div class="pa-text"><strong>Semester All-Access</strong>All 20 kits across 4 subjects are fully unlocked until the end of the semester. No limits!</div><span class="pa-btn pa-btn-success">Active Plan</span>`;
+  }
+}
+
+function renderKits() {
+  const grid = document.getElementById('kitGrid');
+  let html = '';
+
+  SUBJECTS.forEach(sub => {
+    KIT_TYPES.forEach(kit => {
+      const unlocked = isKitUnlocked(sub.code, kit.id);
+      const progress = unlocked ? Math.floor(Math.random() * 40 + 20) : 0;
+
+      if (currentPlan === 'free' && kit.id !== 'flashcard') return; 
+
+      html += `<div class="k-card ${unlocked ? 'unlocked' : 'locked'}">
+        <div class="k-icon">${kit.icon}</div>
+        <div class="k-subject">${sub.code}</div>
+        <div class="k-name">${kit.name}</div>
+        <div class="k-meta">${sub.name}</div>
+        ${unlocked ? `
+          <div class="k-progress-wrap">
+            <div class="k-progress-label"><span>Progress</span><span>${progress}%</span></div>
+            <div class="k-prog-bg"><div class="k-prog-fill" style="width:${progress}%"></div></div>
+          </div>
+          <div class="k-footer">
+            <span class="k-status open">✓ Unlocked</span>
+            <a onclick="openReviewer('${sub.code}', '${kit.name}')" class="btn-card btn-card-open">Open Kit</a>
+          </div>
+        ` : `
+          <div class="k-footer">
+            <span class="k-status locked">🔒 ₱${kit.price}</span>
+            <a onclick="openUnlockModal('${sub.code}', '${kit.id}', '${kit.name}', ${kit.price})" class="btn-card btn-card-unlock">Unlock Kit</a>
+          </div>
+        `}
+      </div>`;
+    });
+  });
+
+  grid.innerHTML = html;
+}
+
+function renderSubjectProgress() {
+  const el = document.getElementById('subjectProgressPage');
+  
+  if (currentPlan === 'free') {
+    el.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem; border: 2px dashed var(--muted); border-radius: 16px;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+      <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem;">Detailed Progress Locked</h3>
+      <p style="color: var(--muted); font-weight: 500;">Unlock kits or upgrade your plan to track your mastery per subject.</p>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = SUBJECTS.map(sub => {
+    const unlockedKits = (PLAN_KITS[currentPlan]?.[sub.code] || []);
+    const allKits = KIT_TYPES.map(k => k.id);
+    const pills = allKits.map(k => {
+      const isOpen = unlockedKits.includes(k);
+      const kt = KIT_TYPES.find(t => t.id === k);
+      return `<span class="sp-kit-pill ${isOpen ? 'pill-open' : 'pill-locked'}">${kt.name}</span>`;
+    }).join('');
+    
+    return `<div class="sp-item">
+      <div class="sp-top">
+        <div class="sp-name">${sub.icon} ${sub.code} — ${sub.name}</div>
+        <div class="sp-pct">${sub.progress}%</div>
+      </div>
+      <div class="sp-bg"><div class="sp-fill" style="width:${sub.progress}%"></div></div>
+      <div class="sp-kits">${pills}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderSidebar() {
+  const el = document.getElementById('sidebarSubjects');
+  el.innerHTML = SUBJECTS.map(sub => {
+    const hasAny = currentPlan === 'semester' || (PLAN_KITS['perkit']?.[sub.code]?.length > 0 && currentPlan !== 'free');
+    return `<a class="subject-link ${hasAny ? 'unlocked' : 'locked'}" onclick="setView('dashboard')">
+      <span class="subject-dot ${hasAny ? 'dot-active' : 'dot-locked'}"></span>
+      ${sub.code}
+    </a>`;
+  }).join('');
+}
+
+function renderActivity() {
+  const el = document.getElementById('activityList');
+  if (currentPlan === 'free') {
+    el.innerHTML = `<div style="text-align:center;padding:3rem;background:white;border:2px dashed var(--muted);border-radius:16px;color:var(--muted);font-weight:600;">No activity yet. Unlock kits to start reviewing.</div>`;
+    return;
+  }
+  el.innerHTML = ACTIVITY.map(a => `<div class="activity-item">
+    <div class="act-icon">${a.icon}</div>
+    <div class="act-info">
+      <div class="act-title">${a.title}</div>
+      <div class="act-sub">${a.sub}</div>
+    </div>
+    ${a.score ? `<div class="act-score ${a.cls}">${a.score}</div>` : ''}
+  </div>`).join('');
+}
+
+function renderPlanner() {
+  const el = document.getElementById('plannerContainer');
+  if (!el) return;
+  
+  let html = '';
+  PLANNER_DATA.forEach((dayGroup, dIdx) => {
+    html += `<div class="planner-day">
+      <div class="planner-day-title">${dayGroup.day}</div>`;
+    
+    dayGroup.tasks.forEach((task, tIdx) => {
+      html += `
+        <div class="task-item">
+          <div class="task-left">
+            <div class="task-check ${task.done ? 'done' : ''}" onclick="toggleTask(${dIdx}, ${tIdx})"></div>
+            <div>
+              <div class="task-text">${task.title}</div>
+              <div class="task-sub">${task.sub}</div>
+            </div>
+          </div>
+          <div class="task-time">${task.time}</div>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+  el.innerHTML = html;
+}
+
+function renderUpgradeBox() {
+  const el = document.getElementById('upgradeBoxSidebar');
+  if (currentPlan === 'semester') { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="upgrade-box">
+    <p>Unlock all 20 kits for just <strong>₱999</strong> — covers prelim, midterms, and finals.</p>
+    <a onclick="setPlan('semester')">Get Semester Access →</a>
+  </div>`;
+}
+
+// Initialize
+render();
+</script>
+</body>
+</html>
